@@ -1,0 +1,206 @@
+---
+title: "File management and coding styles"
+format: revealjs
+editor: visual
+author: Reiko Okamoto
+date: 2024-08-14
+---
+
+## 🎯Objective
+
+-   Explain the importance of well-organized files and readable code
+
+## 💡Importance of File Management
+
+-   Consistency in file organization improves collaboration and project longevity
+
+-   A clear structure prevents confusion
+
+## 🗂️Suggested Directory Structure {.scrollable}
+
+-   Directory layout
+
+    ```         
+    Project/
+    ├── data/          # Raw and cleaned datasets
+    ├── src/           # R scripts for analysis
+    ├── helpers/       # Utility functions and custom scripts
+    ├── output/        # Results like plots, tables, reports
+    ├── qa/            # Data quality checks
+    └── README.md      # Overview of the project
+    ```
+
+-   `data/`: Raw and processed data files
+
+-   `src/`: Analysis scripts
+
+-   `helpers/`: Custom functions used across analysis
+
+-   `output/`: Plots, tables, reports, etc.
+
+-   `qa/`: Scripts and documents related to quality assurance
+
+-   `README.md`: Provides an overview of the project and directory contents
+
+## 📄Using README Files
+
+-   Why README?
+
+    -   Helps collaborators quickly understand the project structure
+
+-   Example README structure
+
+    -   Introduction: Brief description of objectives
+
+    -   Directory overview: Explanation of each folder and file
+
+    -   How to run the analysis: Basic steps to generate the outputs
+
+## 🏛️3 Principles of File Naming
+
+-   Machine readable
+    -   Avoid spaces and special characters that might be misinterpreted by programs, use underscores or hyphens
+    -   Example: `create_table_01.R` instead of `Create Table 1.R`
+-   Human readable
+    -   Descriptive names that clearly convey content
+    -   Example: `mth-avg-abs_by-sex.csv` instead of `Untitled 243 IMPORTANT.csv`
+
+## 🏛️3 Principles of File Naming {.scrollable}
+
+-   Compatible with default ordering
+    -   Use ISO date format (YYYY-MM-DD) for chronological files
+
+        -   Example: `2024-08-13_analysis-results.csv`
+
+    -   Use left-padding to ensure proper ordering for sequential files
+
+        ```         
+        # without left-padding
+        1_clean.R
+        10_analyze.R
+        2_wrangle.R
+        3_visualize.R
+
+        # with left-padding
+        01_clean.R
+        02_wrangle.R
+        03_visualize.R
+        10_analyze.R
+        ```
+
+## 🏠➡️🛣️Absolute Paths {.scrollable}
+
+-   A **file path** is like a set of directions to find a file or folder on your computer
+
+-   An **absolute path** gives the full address of a file, starting from the root of your computer's file system
+
+-   Why avoid hardcoding absolute paths?
+
+    -   Absolute paths are tied to your specific computer.
+
+    -   If you move your project to a different computer or share it someone else, the path is most likely not going to work, breaking your analysis.
+
+        ``` r
+        # won't work on Stacey's because her file system is different
+        readr::read_csv("C:/Reiko/Documents/my_analysis/data/bike-share.csv") 
+        ```
+
+## 🚩➡️🛣️Relative Paths {.scrollable}
+
+-   A **relative path** refers to a file or folder based on your current location in the directory structure (i.e., working directory)
+
+-   Relative paths make your code more portable (i.e., work across different computers) as long as the directory structure is consistent
+
+-   The [here](https://here.r-lib.org/) package makes it easier to construct paths from the root of your project directory ([RStudio Projects](https://support.posit.co/hc/en-us/articles/200526207-Using-RStudio-Projects) is responsible for setting the working directory to this root)
+
+    ```         
+    my-analysis/
+    ├── data/
+    │       └── bike-share.csv
+    ├── src/
+    ├── output/
+    ├── my-analysis.Rproj
+    └── README.md
+    ```
+
+    ``` r
+    # without here
+    readr::read_csv("data/bike-share.csv")
+
+    # with here
+    readr::read_csv(here::here("data", "bike-share.csv"))     
+    ```
+
+## 🌎Tidyverse
+
+-   Why Tidyverse?
+
+    -   Consistent syntax encourages clean, readable code, which helps in both understanding and debugging
+
+    -   Includes a suite of packages that work seamlessly together
+
+    -   Optimized for handling large data sets and performing complex operations efficiently
+
+    -   Backed by a strong community and extensive documentation
+
+## 💅Tidyverse Style Guidelines
+
+-   Key aspects
+
+    -   Naming conventions
+
+    -   Code spacing
+
+## 🏷️Naming Variables and Functions
+
+-   Use clear, descriptive names for variables and functions
+
+-   Use snake_case
+
+-   Avoid reusing names of common functions (e.g., `mean`, `sd`, `sum`)
+
+## 📏Spacing and Long Lines
+
+-   Most infix operators (e.g., `==`, `+`, `-`, `<-`) should always be surrounded by spaces
+
+``` r
+# Good
+height <- (feet * 12) + inches
+mean(x, na.rm = TRUE)
+
+# Bad
+height<-feet*12+inches
+mean(x, na.rm=TRUE)
+```
+
+-   Limit your code to 80 characters per line
+
+## ⬅️Assignment
+
+-   Use `<-`, not `=`, for assignment
+
+``` r
+# Good
+x <- 5
+
+# Bad
+x = 5
+```
+
+## #️⃣Comments and roxygen2
+
+-   Use comments to record important findings and analysis decisions
+
+-   Use [roxygen2](https://roxygen2.r-lib.org/) to document your functions
+
+## 📦Helpful R Packages
+
+-   [styler](https://styler.r-lib.org/) allows you to interactively restyle selected text, files, or entire projects
+
+-   [lintr](https://github.com/r-lib/lintr) performs automated checks to confirm that you conform to the style guide
+
+## 📚Resources
+
+-   <https://datamgmtinedresearch.com/style>
+
+-   <https://style.tidyverse.org/files.html>
